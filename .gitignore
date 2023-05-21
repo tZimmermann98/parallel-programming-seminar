@@ -83,3 +83,10 @@ dkms.conf
 *.fatbin
 
 # End of https://www.toptal.com/developers/gitignore/api/c++,cuda,c
+
+output/
+
+# CMake
+build/
+
+.cache/
