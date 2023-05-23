@@ -8,7 +8,7 @@ set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} --expt-extended-lambda")
 
 include_directories(include)
 
-add_executable(ppseminar_parallel main.cu)
+add_executable(main main.cu)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
