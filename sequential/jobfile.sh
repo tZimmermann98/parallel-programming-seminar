@@ -1,14 +1,15 @@
 #!/bin/bash
 
 #SBATCH --exclusive
-#SBATCH --partition=normal
+#SBATCH --partition=gpu2080
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=1
-#SBATCH --time=1:00:00
+#SBATCH --gres=gpu:0
+#SBATCH --time=2:00:00
 #SBATCH --job-name=sequential_runtime_comparison
-#SBATCH --output=/scratch/tmp/t_zimm11/normal.out
-#SBATCH --error=/scratch/tmp/t_zimm11/normal.error
+#SBATCH --output=/scratch/tmp/t_zimm11/gpu2080node1_sequential.out
+#SBATCH --error=/scratch/tmp/t_zimm11/gpu2080node1_sequential.error
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=t_zimm11@uni-muenster.de
 #SBATCH --mem=0
