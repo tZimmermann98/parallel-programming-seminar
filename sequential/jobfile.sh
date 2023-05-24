@@ -37,10 +37,11 @@ cmake ..
 cmake --build .
 )
 
-echo "size;map_duration;reduce_duration;zip_duration" > "${path}/ppseminar_sequential.out"
-
-for size in 1000000 10000000 100000000; do
-    ./${implementation}/${buildname}/main $size >> "${path}/ppseminar_sequential.out"
+for (( run=1; run<=50; run++ )) do
+    echo "size,map_duration,reduce_duration,zip_duration" > "${path}/ppseminar_sequential_${run}.out"
+    for (( size=10000000; size<=100000000; size+=10000000 )) do
+        ./${implementation}/${buildname}/main $size >> "${path}/ppseminar_sequential_${run}.out"
+    done
 done
 
 exit 0

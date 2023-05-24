@@ -52,22 +52,34 @@ int main(int argc, char** argv) {
     auto mult = [] __device__ (int x, int y) { return x * y; };
 
     // initialize timeings
-    float map_copy_device, map_kernel, map_copy_host, map_total;
-    float reduce_copy_device, reduce_kernel, reduce_copy_host, reduce_total;
-    float zip_copy_device, zip_kernel, zip_copy_host, zip_total;
+    float map_copy_device, map_kernel_time, map_copy_host, map_total;
+    float reduce_copy_device, reduce_kernel_time, reduce_copy_host, reduce_total;
+    float zip_copy_device, zip_kernel_time, zip_copy_host, zip_total;
 
     // run parallel map, reduce, and zip functions
-    parallel::map(input, output_map, square, numThreads, map_copy_device, map_kernel, map_copy_host, map_total);
+    auto map_start = std::chrono::high_resolution_clock::now();
+    parallel::map(input, output_map, square, numThreads, map_copy_device, map_kernel_time, map_copy_host, map_total);
+    auto map_stop = std::chrono::high_resolution_clock::now();
+    auto duration_map = map_stop - map_start;
+    auto map_duration = std::chrono::duration<float, std::milli>(duration_map).count();
 
-    parallel::reduce(input, output_reduce, add, numThreads, reduce_copy_device, reduce_kernel, reduce_copy_host, reduce_total);
-    
-    parallel::zip(input, input2, output_zip, mult, numThreads, zip_copy_device, zip_kernel, zip_copy_host, zip_total);
+    auto reduce_start = std::chrono::high_resolution_clock::now();
+    parallel::reduce(input, output_reduce, add, numThreads, reduce_copy_device, reduce_kernel_time, reduce_copy_host, reduce_total);
+    auto reduce_stop = std::chrono::high_resolution_clock::now();
+    auto duration_reduce = reduce_stop - reduce_start;
+    auto reduce_duration = std::chrono::duration<float, std::milli>(duration_reduce).count();
+
+    auto zip_start = std::chrono::high_resolution_clock::now();
+    parallel::zip(input, input2, output_zip, mult, numThreads, zip_copy_device, zip_kernel_time, zip_copy_host, zip_total);
+    auto zip_stop = std::chrono::high_resolution_clock::now();
+    auto duration_zip = zip_stop - zip_start;
+    auto zip_duration = std::chrono::duration<float, std::milli>(duration_zip).count();
 
     // print size, threads and timings in csv format
     std::cout << size << "," << numThreads << ",";
-    std::cout << map_copy_device << "," << map_kernel << "," << map_copy_host << "," << map_total << ","; 
-    std::cout << reduce_copy_device << "," << reduce_kernel << "," << reduce_copy_host << "," << reduce_total << ",";
-    std::cout << zip_copy_device << "," << zip_kernel << "," << zip_copy_host << "," << zip_total << std::endl;
+    std::cout << map_copy_device << "," << map_kernel_time << "," << map_copy_host << "," << map_total << "," << map_duration << ","; 
+    std::cout << reduce_copy_device << "," << reduce_kernel_time << "," << reduce_copy_host << "," << reduce_total << "," << reduce_duration << ",";
+    std::cout << zip_copy_device << "," << zip_kernel_time << "," << zip_copy_host << "," << zip_total << "," << zip_duration << std::endl;
 
     return 0;
 }

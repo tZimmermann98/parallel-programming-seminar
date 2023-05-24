@@ -41,10 +41,11 @@ cmake ..
 cmake --build .
 )
 
-echo "size;numThreads;map_copy_device;map_kernel;map_copy_host;map_total;reduce_copy_device;reduce_kernel;reduce_copy_host;reduce_total;zip_copy_device;zip_kernel;zip_copy_host;zip_total" > "${path}/ppseminar_parallel.out"
-
-for size in 1000000 10000000 10000000; do
-    ./${implementation}/${buildname}/main $size >> "${path}/ppseminar_parallel.out"
+for (( run=1; run<=50; run++ )) do
+    echo "size,numThreads,map_copy_device,map_kernel,map_copy_host,map_total,map_total_chrono,reduce_copy_device,reduce_kernel,reduce_copy_host,reduce_total,reduce_total_chrono,zip_copy_device,zip_kernel,zip_copy_host,zip_total,zip_total_chrono" > "${path}/ppseminar_parallel_${run}.out"
+    for (( size=10000000; size<=100000000; size+=10000000 )) do
+        ./${implementation}/${buildname}/main $size >> "${path}/ppseminar_parallel_${run}.out"
+    done
 done
 
 exit 0

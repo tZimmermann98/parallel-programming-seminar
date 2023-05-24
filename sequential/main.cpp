@@ -28,25 +28,28 @@ int main(int argc, char** argv) {
     auto map_start = std::chrono::high_resolution_clock::now();
     sequential::map(input, output_map, [](int x){return x * x;});
     auto map_stop = std::chrono::high_resolution_clock::now();
-    auto map_duration = std::chrono::duration_cast<std::chrono::microseconds>(map_stop-map_start);
+    auto duration_map = map_stop - map_start;
+    auto map_duration = std::chrono::duration<float, std::milli>(duration_map).count();
 
     // time measurement Sequential Reduce
     auto reduce_start = std::chrono::high_resolution_clock::now();
     sequential::reduce(input, output_reduce, [](int x, int y){return x + y;});
     auto reduce_stop = std::chrono::high_resolution_clock::now();
-    auto reduce_duration =  std::chrono::duration_cast<std::chrono::microseconds>(reduce_stop-reduce_start);
+    auto duration_reduce = reduce_stop - reduce_start;
+    auto reduce_duration = std::chrono::duration<float, std::milli>(duration_reduce).count();
 
     // time measurement Sequential Zip
     auto zip_start = std::chrono::high_resolution_clock::now();
     sequential::zip(input, input2, output_zip, [](int x, int y){return x * y;});
     auto zip_stop = std::chrono::high_resolution_clock::now();
-    auto zip_duration =  std::chrono::duration_cast<std::chrono::microseconds>(zip_stop-zip_start);
+    auto duration_zip = zip_stop - zip_start;
+    auto zip_duration = std::chrono::duration<float, std::milli>(duration_zip).count();
 
     // print  size and timings in csv format with semicolon as separator
-    std::cout << size << ";";
-    std::cout << map_duration.count() << ";";
-    std::cout << reduce_duration.count() << ";";
-    std::cout << zip_duration.count() << std::endl;
+    std::cout << size << ",";
+    std::cout << map_duration << ",";
+    std::cout << reduce_duration << ",";
+    std::cout << zip_duration << std::endl;
 
     return 0;
 }
