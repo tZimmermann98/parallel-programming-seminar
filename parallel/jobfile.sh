@@ -41,9 +41,9 @@ cmake ..
 cmake --build .
 )
 
-echo "col1,col2,col3,col4,col5" > "${path}/ppseminar_parallel.out"
+echo "size;numThreads;map_copy_device;map_kernel;map_copy_host;map_total;reduce_copy_device;reduce_kernel;reduce_copy_host;reduce_total;zip_copy_device;zip_kernel;zip_copy_host;zip_total" > "${path}/ppseminar_parallel.out"
 
-for size in 10 100 1000; do
+for size in 1000000 10000000 10000000; do
     ./${implementation}/${buildname}/main $size >> "${path}/ppseminar_parallel.out"
 done
 

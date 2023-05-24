@@ -4,20 +4,18 @@
 
 #include "include/parallel.cuh"
 
-struct my_pair {
-    int first;
-    int second;
-};
-
 int getNumThreads(int size) {
+    // get device properties
     int device;
     cudaGetDevice(&device);
     cudaDeviceProp props;
     cudaGetDeviceProperties(&props, device);
 
+    // get max threads per block and warp size
     int maxThreadsPerBlock = props.maxThreadsPerBlock;
     int warpSize = props.warpSize;
 
+    // calculate number of threads to use
     int numThreads = (size + warpSize - 1) / warpSize * warpSize;
     numThreads = std::min(numThreads, maxThreadsPerBlock);
 
@@ -25,7 +23,7 @@ int getNumThreads(int size) {
 }
 
 int main(int argc, char** argv) {
-    int size = 10; // default size is 10
+    int size = 1000000; // default size is 10
 
     if (argc > 1) {
         // if user provides a size, use that size instead
@@ -35,52 +33,41 @@ int main(int argc, char** argv) {
     // calcualte number of threads to use
     int numThreads = getNumThreads(size);
 
-    std::cout << "Number of Threads: " << numThreads << std::endl;
-
+    // initialize input and output vectors
     std::vector <int> input(size);
     std::vector <int> input2(size);
     std::vector <int> output_map(size);
     int output_reduce = 0;
-    std::vector <my_pair> output_zip(size);
+    std::vector <int> output_zip(size);
 
+    // fill input vectors with values
     for (int i = 0; i < size; i++){
         input[i] = i + 1;
         input2[i] = (i + 1) * 2;
     }
 
+    // define device lambda functions for kernels
     auto square = [] __device__ (int x) { return x * x; }; 
-
-    parallel::map(input, output_map, square, numThreads);
-
-    std::cout << "Parallel Map:" << std::endl;
-    
-    for (int i = 0; i < size; i++){
-        std::cout << output_map[i] << " ";
-    }
-    std::cout << std::endl;
-
     auto add = [] __device__ (int x, int y) { return x + y; };
+    auto mult = [] __device__ (int x, int y) { return x * y; };
 
-    parallel::reduce(input, output_reduce, add, numThreads);
+    // initialize timeings
+    float map_copy_device, map_kernel, map_copy_host, map_total;
+    float reduce_copy_device, reduce_kernel, reduce_copy_host, reduce_total;
+    float zip_copy_device, zip_kernel, zip_copy_host, zip_total;
 
-    std::cout << "Parallel Reduce:" << std::endl;
+    // run parallel map, reduce, and zip functions
+    parallel::map(input, output_map, square, numThreads, map_copy_device, map_kernel, map_copy_host, map_total);
 
-    std::cout << output_reduce << std::endl;
+    parallel::reduce(input, output_reduce, add, numThreads, reduce_copy_device, reduce_kernel, reduce_copy_host, reduce_total);
     
-    auto create_pair_parallel = [] __device__ (int x, int y) {
-    my_pair pair;
-    pair.first = x;
-    pair.second = y;
-    return pair;
-    };
+    parallel::zip(input, input2, output_zip, mult, numThreads, zip_copy_device, zip_kernel, zip_copy_host, zip_total);
 
-    parallel::zip(input, input2, output_zip, create_pair_parallel, numThreads);
-
-    std::cout << "Parallel Zip:" << std::endl;
-
-    for (int i = 0; i < size; i++){
-        std::cout << output_zip[i].first << "," << output_zip[i].second << " ";
-    }
+    // print size, threads and timings in csv format
+    std::cout << size << "," << numThreads << ",";
+    std::cout << map_copy_device << "," << map_kernel << "," << map_copy_host << "," << map_total << ","; 
+    std::cout << reduce_copy_device << "," << reduce_kernel << "," << reduce_copy_host << "," << reduce_total << ",";
+    std::cout << zip_copy_device << "," << zip_kernel << "," << zip_copy_host << "," << zip_total << std::endl;
 
     return 0;
 }

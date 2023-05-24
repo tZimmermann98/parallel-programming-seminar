@@ -37,9 +37,9 @@ cmake ..
 cmake --build .
 )
 
-echo "col1,col2,col3,col4,col5" > "${path}/ppseminar_sequential.out"
+echo "size;map_duration;reduce_duration;zip_duration" > "${path}/ppseminar_sequential.out"
 
-for size in 10 100 1000; do
+for size in 1000000 10000000 100000000; do
     ./${implementation}/${buildname}/main $size >> "${path}/ppseminar_sequential.out"
 done
 
