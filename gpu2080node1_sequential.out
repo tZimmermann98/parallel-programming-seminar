@@ -1,0 +1,25 @@
+-- The CXX compiler identification is GNU 11.3.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /Applic.HPC/Easybuild/zen3/2022a/software/GCCcore/11.3.0/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/t/t_zimm11/sequential/build-normal
+[ 50%] Building CXX object CMakeFiles/main.dir/main.cpp.o
+[100%] Linking CXX executable main
+[100%] Built target main
+################################# JOB REPORT ##################################
+Job ID: 15416923
+Cluster: palma2
+User/Group: t_zimm11/u0dawin
+State: COMPLETED (exit code 0)
+Nodes: 1
+Cores per node: 32
+CPU Utilized: 00:10:53
+CPU Efficiency: 3.04% of 05:58:24 core-walltime
+Job Wall-clock time: 00:11:12
+Memory Utilized: 1.49 GB
+Memory Efficiency: 0.64% of 234.38 GB
+###############################################################################
