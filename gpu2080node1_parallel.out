@@ -1,0 +1,31 @@
+-- The CXX compiler identification is GNU 11.3.0
+-- The CUDA compiler identification is NVIDIA 11.7.64
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /Applic.HPC/Easybuild/zen3/2022a/software/GCCcore/11.3.0/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Detecting CUDA compiler ABI info
+-- Detecting CUDA compiler ABI info - done
+-- Check for working CUDA compiler: /Applic.HPC/Easybuild/zen3/2022a/software/CUDA/11.7.0/bin/nvcc - skipped
+-- Detecting CUDA compile features
+-- Detecting CUDA compile features - done
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/t/t_zimm11/parallel/build-gpu2080
+[ 50%] Building CUDA object CMakeFiles/main.dir/main.cu.o
+[100%] Linking CUDA executable main
+[100%] Built target main
+################################# JOB REPORT ##################################
+Job ID: 15416922
+Cluster: palma2
+User/Group: t_zimm11/u0dawin
+State: COMPLETED (exit code 0)
+Nodes: 1
+Cores per node: 32
+CPU Utilized: 00:08:07
+CPU Efficiency: 2.79% of 04:50:40 core-walltime
+Job Wall-clock time: 00:09:05
+Memory Utilized: 1.49 GB
+Memory Efficiency: 0.64% of 234.38 GB
+###############################################################################

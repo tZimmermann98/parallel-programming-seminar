@@ -6,7 +6,7 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=1
 #SBATCH --gres=gpu:1
-#SBATCH --time=1:00:00
+#SBATCH --time=0:30:00
 #SBATCH --job-name=parallel_runtime_comparison
 #SBATCH --output=/scratch/tmp/t_zimm11/gpu2080node1_parallel.out
 #SBATCH --error=/scratch/tmp/t_zimm11/gpu2080node1_parallel.error
