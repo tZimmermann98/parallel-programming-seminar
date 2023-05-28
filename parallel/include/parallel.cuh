@@ -2,6 +2,7 @@
 #define PARALLEL_H
 
 #include "vector"
+#include "algorithm"
 #include "cuda.h"
 #include "cuda_runtime.h"
 

@@ -1,6 +1,8 @@
 template <typename T, typename O, typename F>
 __global__ void map_kernel(T* input, O* output, int size, F func){
+    // Calculate the global index for the current thread across all blocks
     int idx = blockIdx.x * blockDim.x + threadIdx.x;
+    // if index is less than the size of the input vector, apply the function to the input and store the result in the output
     if (idx < size){
         output[idx] = func(input[idx]);
     }
@@ -8,26 +10,37 @@ __global__ void map_kernel(T* input, O* output, int size, F func){
 
 template <typename T, typename O, typename F>
 __global__ void reduce_kernel(T* input, O* output, int size, F func){
+    // Shared memory for each block
     __shared__ O sdata[1024];
+    // Get the thread ID within the current block
     unsigned int tid = threadIdx.x;
-    unsigned int i = blockIdx.x * blockDim.x + threadIdx.x;
+    // Calculate the global index for the current thread across all blocks
+    unsigned int idx = blockIdx.x * blockDim.x + threadIdx.x;
 
-    if (i < size){
-        sdata[tid] = input[i];
+    if (idx < size){
+        // if index is less than the size of the input vector, store the input in the shared memory
+        sdata[tid] = input[idx];
     }
     else {
+        // else store 0 in the shared memory
         sdata[tid] = 0;
     }
+    // Wait for all threads to finish writing to shared memory
     __syncthreads();
 
+    // Reduction in shared memory
     for (unsigned int s = blockDim.x / 2; s > 0; s >>= 1){
+        // if the thread ID is less than the current shared memory size
         if (tid < s){
+            // apply the function to the value at current index and at index + the current shared memory size
             sdata[tid] = func(sdata[tid], sdata[tid + s]);
         }
+        // Wait for all threads to finish writing to shared memory
         __syncthreads();
     }
 
     if (tid == 0){
+        // Store the result of the reduction in the output vector
         output[blockIdx.x] = sdata[0];
     }
     
@@ -35,8 +48,10 @@ __global__ void reduce_kernel(T* input, O* output, int size, F func){
 
 template <typename T1, typename T2, typename O, typename F>
 __global__ void zip_kernel(T1* input1, T2* input2, O* output, int size, F func){
+    // Calculate the global index for the current thread across all blocks
     int idx = blockIdx.x * blockDim.x + threadIdx.x;
     if (idx < size){
+        // if index is less than the size of the input vectors, apply the function to the inputs and store the result in the output
         output[idx] = func(input1[idx], input2[idx]);
     }
 }
@@ -186,7 +201,7 @@ void zip(std::vector <T1>& input1, std::vector <T2>& input2, std::vector <T3>& o
     cudaEventCreate(&stop_all);
     cudaEventRecord(start_all);
 
-    int size = input1.size();
+    int size = std::min(input1.size(), input2.size());
 
     T1* d_input1;
     T2* d_input2;

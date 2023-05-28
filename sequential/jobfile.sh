@@ -14,7 +14,7 @@
 #SBATCH --mail-user=t_zimm11@uni-muenster.de
 #SBATCH --mem=0
 
-partition=normal
+partition=gpu2080
 implementation="sequential"
 dirname=$(date +"%Y-%m-%dT%H-%M-%S-${partition}-${implementation}")
 
