@@ -93,3 +93,5 @@ build/
 .venv/
 
 .vscode
+
+.DS_STORE

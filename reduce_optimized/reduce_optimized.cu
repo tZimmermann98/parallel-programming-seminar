@@ -237,7 +237,7 @@ int main(int argc, char** argv) {
 
     // print size, threads and timings in csv format
     std::cout << size << "," << numThreads << ",";
-    std::cout << reduce_copy_device << "," << reduce_kernel_time << "," << reduce_copy_host << "," << reduce_total << "," << reduce_duration << "," << std::endl;
+    std::cout << reduce_copy_device << "," << reduce_kernel_time << "," << reduce_copy_host << "," << reduce_total << "," << reduce_duration << std::endl;
 
     // print output
     // std::cout << "Reduce output" << std::endl;
